@@ -1,0 +1,3 @@
+[submodule "GitHubTests/CMDRunner"]
+	path = GitHubTests/CMDRunner
+	url = https://github.com/Aetheris743/PythonInteractiveCMDRunner
