@@ -1,3 +1,6 @@
 [submodule "GitHubTests/CMDRunner"]
 	path = GitHubTests/CMDRunner
 	url = https://github.com/Aetheris743/PythonInteractiveCMDRunner
+[submodule "GitHubTests/UI"]
+	path = GitHubTests/UI
+	url = https://github.com/Aetheris743/python-commandline-ui
