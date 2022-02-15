@@ -35,16 +35,17 @@ if __name__ == "__main__":
         sys.exit(1)
     
     #show the user the available commands
-    commands = ["Run Tests", "Quit"]
+    commands = ["Run Tests", "Modify .gitignore (Recommended)", "Quit"]
     main_menu = interface.prompt(commands)
-    match main_menu.get_input():
-        case 0:
-            run_tests()
-        case 1:
-            exit()
-        case _:
-            print("How did this even happen? The input function should parse and verify the input.")
-            print("Please contact the developer or file a error report at.\nhttps://github.com/Aetheris743/GitHub-Classroom-Local-Autograding")
-            sys.exit(1)
+    result = main_menu.get_input()
+    if result is 0:
+        run_tests()
+    if result is 1:
+        # add this folder to the .gitignore
+        with open(".gitignore", "a") as f:
+            f.write("GitHubTests/\n")
+        pass
+    if result is 2:
+        exit()
             
 
