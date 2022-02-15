@@ -1,4 +1,3 @@
-from unittest import result
 from CMDRunner import command
 from UI import interface
 import json
@@ -24,6 +23,9 @@ def run_tests():
 
         # run the cleanup for the test
         command.script_interface("make clean").close()
+    
+    for key in results:
+        print("{}: {}".format(key, results[key]["result"]))
 
 
 # check if the program is in the expected directory
