@@ -6,8 +6,9 @@ import sys
 import time
 
 def show_diff(result, goal) -> None:
-    lines = goal.strip().split("\n")
-    new_lines = result.strip().split("\n")
+    print("")
+    lines = goal.split("\n")
+    new_lines = result[:-1].split("\n")
 
     while len(new_lines) < len(lines):
         new_lines.append("")
@@ -17,29 +18,23 @@ def show_diff(result, goal) -> None:
     for line in range(len(new_lines)):
         if new_lines[line].strip() != lines[line].strip():
             print("❌ " + new_lines[line])
-            print("   " + interface.format_text(lines[line] if lines[line] != "" else "\\n", "blue", True))
+            print("   " + interface.format_text(lines[line] if lines[line].strip() != "" else "\\n", "blue", True))
         else:
             print("✅ " + new_lines[line])
+    print("")
 
             
-def input_equalls(result, goal) -> bool:
-    lines = goal.strip().split("\n")
-    new_lines = result.strip().split("\n")
-    while len(new_lines) != len(lines):
-        return False
-
-    for line in range(len(new_lines)):
-        if new_lines[line].strip() != lines[line].strip():
-            return False
-
-    return True
+def input_equalls(result, goal, line_ending="\r\n") -> bool:
+    return result[:-1].replace("\n", line_ending) == goal
 
 def run_tests():
     results = {}
     with open(".github/classroom/autograding.json", "r") as f:
         data = json.load(f)
+
+    number_passed = 0
+    number_total = len(data["tests"])
     for test in data["tests"]:
-        print("Running test: " + test["name"])
         results[test["name"]] = {}
         # just run the prep for the test
         command.script_interface(test["setup"].split(";")[0])
@@ -56,14 +51,32 @@ def run_tests():
         # test_interface.write("\n") # might add this later
         results[test["name"]]["output"] = test_interface.read_all()
         results[test["name"]]["result"] = input_equalls(results[test["name"]]["output"], test["output"])
+        if results[test["name"]]["result"]:
+            number_passed += 1
         test_interface.close()
 
         # run the cleanup for the test
         command.script_interface("make clean")
     
+    options = []
     for key in results:
-        print("{}: {}".format(key, results[key]["result"]))
+        symbol = "✅" if results[key]["result"] else "❌"
+        options.append(f"{symbol} {key}")
+        # print("{}: {}".format(key, results[key]["result"]))
+    options_prompt = interface.prompt(options)
+    if number_passed != number_total:
+        print(f"\n\nPassed {number_passed} out of {number_total}\n\nExamine test results (-1 to quit):")
+        option = options_prompt.get_input()
+        while option > -1 and option < len(options):
+            test_input = data['tests'][option]['input'].replace('\r', '\\r').replace('\n', '\\n')
+            print(f"Test '{ data['tests'][option]['name'] }' used stdin input '{ test_input }'")
+            show_diff(results[data["tests"][option]["name"]]["output"], data["tests"][option]["output"])
+            print("Examine test results (-1 to quit):")
+            option = options_prompt.get_input()        
 
+    if number_passed == number_total:
+        print(f"\nPassed all tests! 🎊🥳🚀")
+        return
 
 # check if the program is in the expected directory
 if __name__ == "__main__":
@@ -75,14 +88,12 @@ if __name__ == "__main__":
     commands = ["Run Tests", "Modify .gitignore (Recommended)", "Quit"]
     main_menu = interface.prompt(commands)
     result = main_menu.get_input()
-    if result is 0:
+    if result == 0:
         run_tests()
-    if result is 1:
+    if result == 1:
         # add this folder to the .gitignore
         with open(".gitignore", "a") as f:
             f.write("GitHubTests/\n")
         pass
-    if result is 2:
+    if result == 2:
         exit()
-            
-
