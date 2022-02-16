@@ -95,20 +95,7 @@ if __name__ == "__main__":
 
         should_change_git = input("Update .gitignore (y/n):")
         if should_change_git == "y":
-            with open(".gitignore", "a") as f:
+            with open(join(directory,".gitignore"), "a") as f:
                 f.write("test\n")
         sys.exit(0)
-    
-    #show the user the available commands
-    commands = ["Run Tests", "Modify .gitignore (Recommended)", "Quit"]
-    main_menu = interface.prompt(commands)
-    result = main_menu.get_input()
-    if result == 0:
-        run_tests()
-    if result == 1:
-        # add this folder to the .gitignore
-        with open(".gitignore", "a") as f:
-            f.write("GitHubTests/\n")
-        pass
-    if result == 2:
-        exit()
+    run_tests()
