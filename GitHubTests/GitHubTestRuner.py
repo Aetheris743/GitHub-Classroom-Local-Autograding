@@ -7,6 +7,7 @@ import os
 import stat
 import time
 
+# Show the diff between two strings
 def show_diff(result, goal) -> None:
     print("")
     lines = goal.split("\n")
@@ -25,7 +26,7 @@ def show_diff(result, goal) -> None:
             print("✅ " + new_lines[line])
     print("")
 
-            
+# a modified string compare that fits the input/output format          
 def input_equalls(result, goal, line_ending="\r\n") -> bool:
     return result[:-1].replace("\n", line_ending) == goal
 
@@ -50,6 +51,7 @@ def run_tests():
             time.sleep(0.1) #wait for the file to finish writing
             test_interface = command.script_interface(test["run"])
         test_interface.write(test["input"])
+        test_interface.wait(2)
         # test_interface.write("\n") # might add this later
         results[test["name"]]["output"] = test_interface.read_all()
         results[test["name"]]["result"] = input_equalls(results[test["name"]]["output"], test["output"])
@@ -64,7 +66,6 @@ def run_tests():
     for key in results:
         symbol = "✅" if results[key]["result"] else "❌"
         options.append(f"{symbol} {key}")
-        # print("{}: {}".format(key, results[key]["result"]))
     options_prompt = interface.prompt(options)
     if number_passed != number_total:
         print(f"\n\nPassed {number_passed} out of {number_total}\n\nExamine test results (-1 to quit):")
