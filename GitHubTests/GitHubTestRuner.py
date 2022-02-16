@@ -64,7 +64,8 @@ def run_tests(timout=0.1):
         try:
             test_interface.write(test["input"])
         except BrokenPipeError:
-            print("Unnable to run tests: Program may not be compiling succussfully. If it is, please re-run this script after running 'make clean'.")
+            print("Unnable to run tests:\n Program may not be compiling succussfully.\n If it is, please re-run this script after running 'make clean'.")
+            return
         test_interface.proc.stdin.flush()
         test_interface.proc.stdin.close()
         test_interface.wait(timout) #wait for the test to finish running
