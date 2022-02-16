@@ -60,11 +60,11 @@ def run_tests(timout=0.1):
             test_interface = command.script_interface(test["run"])
         except BrokenPipeError:
             time.sleep(0.1) #wait for the file to finish writing
-            try:
-                test_interface = command.script_interface(test["run"])
-            except BrokenPipeError:
-                print("Unnable to run tests: Program may not be compiling succussfully. If it is, please re-run this script after running 'make clean'.")
-        test_interface.write(test["input"])
+            test_interface = command.script_interface(test["run"])
+        try:
+            test_interface.write(test["input"])
+        except BrokenPipeError:
+            print("Unnable to run tests: Program may not be compiling succussfully. If it is, please re-run this script after running 'make clean'.")
         test_interface.proc.stdin.flush()
         test_interface.proc.stdin.close()
         test_interface.wait(timout) #wait for the test to finish running
