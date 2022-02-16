@@ -96,7 +96,7 @@ if __name__ == "__main__":
         should_change_git = input("Update .gitignore (y/n):")
         if should_change_git == "y":
             with open(".gitignore", "a") as f:
-                f.write("GitHubTests/\n")
+                f.write("test\n")
         sys.exit(0)
     
     #show the user the available commands
