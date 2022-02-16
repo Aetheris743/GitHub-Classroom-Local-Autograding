@@ -93,9 +93,10 @@ if __name__ == "__main__":
         
         os.chmod(join(directory, "test"), stat.S_IEXEC)
 
-        should_change_git = input("Update .gitignore (y/n):")
+        should_change_git = input("Update .gitignore (Recommended) (y/n):")
         if should_change_git == "y":
             with open(join(directory,".gitignore"), "a") as f:
                 f.write("test\n")
+        print("Finished")
         sys.exit(0)
     run_tests()
