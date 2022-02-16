@@ -1,8 +1,10 @@
 from CMDRunner import command
 from UI import interface
 import json
-from os.path import exists
+from os.path import exists, join
 import sys
+import os
+import stat
 import time
 
 def show_diff(result, goal) -> None:
@@ -80,9 +82,22 @@ def run_tests():
 
 # check if the program is in the expected directory
 if __name__ == "__main__":
-    if not exists(".github/classroom/autograding.json") or not exists("Makefile"):
-        print("Please run this program from the root directory of the project.")
-        sys.exit(1)
+    if not exists(".github/classroom/autograding.json"):
+        directory = input("To configure test runner, please enter project root folder: ")
+        while not exists(join(directory, ".github/classroom/autograding.json")):
+            print("That folder does not appear to be the root folder of a repository.")
+            directory = input("To configure test runner, please enter project root folder: ")
+        
+        with open(join(directory, "test"), "w") as f:
+            f.write(f"#!/bin/sh\npython3 {__file__}")
+        
+        os.chmod(join(directory, "test"), stat.S_IEXEC)
+
+        should_change_git = input("Update .gitignore (y/n):")
+        if should_change_git == "y":
+            with open(".gitignore", "a") as f:
+                f.write("GitHubTests/\n")
+        sys.exit(0)
     
     #show the user the available commands
     commands = ["Run Tests", "Modify .gitignore (Recommended)", "Quit"]
