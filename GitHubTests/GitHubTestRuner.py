@@ -30,7 +30,7 @@ def show_diff(result, goal) -> None:
 def input_equalls(result, goal, line_ending="\r\n") -> bool:
     return result[:-1].replace("\n", line_ending) == goal
 
-def run_tests():
+def run_tests(timout=0.1):
     results = {}
     with open(".github/classroom/autograding.json", "r") as f:
         data = json.load(f)
@@ -51,7 +51,7 @@ def run_tests():
             time.sleep(0.1) #wait for the file to finish writing
             test_interface = command.script_interface(test["run"])
         test_interface.write(test["input"])
-        test_interface.wait(2)
+        test_interface.wait(timout) #wait for the test to finish running
         # test_interface.write("\n") # might add this later
         results[test["name"]]["output"] = test_interface.read_all()
         results[test["name"]]["result"] = input_equalls(results[test["name"]]["output"], test["output"])
