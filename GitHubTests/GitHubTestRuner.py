@@ -28,7 +28,18 @@ def show_diff(result, goal) -> None:
 
 # a modified string compare that fits the input/output format          
 def input_equalls(result, goal, line_ending="\r\n") -> bool:
-    return result[:-1].replace("\n", line_ending) == goal
+    lines = goal.split("\n")
+    new_lines = result[:-1].split("\n")
+
+    while len(new_lines) != len(lines):
+        new_lines.append("")
+    # while len(lines) < len(new_lines):
+    #     lines.append("")
+
+    for line in range(len(new_lines)):
+        if new_lines[line].strip() != lines[line].strip():
+            return False
+    return True
 
 def run_tests(timout=0.1):
     results = {}
@@ -49,8 +60,13 @@ def run_tests(timout=0.1):
             test_interface = command.script_interface(test["run"])
         except BrokenPipeError:
             time.sleep(0.1) #wait for the file to finish writing
-            test_interface = command.script_interface(test["run"])
+            try:
+                test_interface = command.script_interface(test["run"])
+            except BrokenPipeError:
+                print("Unnable to run tests: Program may not be compiling succussfully. If it is, please re-run this script after running 'make clean'.")
         test_interface.write(test["input"])
+        test_interface.proc.stdin.flush()
+        test_interface.proc.stdin.close()
         test_interface.wait(timout) #wait for the test to finish running
         # test_interface.write("\n") # might add this later
         results[test["name"]]["output"] = test_interface.read_all()
@@ -78,7 +94,7 @@ def run_tests(timout=0.1):
             option = options_prompt.get_input()        
 
     if number_passed == number_total:
-        print(f"\nPassed all tests! 🎊🥳🚀")
+        print(f"\nPassed all tests! 🎊🥳🚀\n")
         return
 
 # check if the program is in the expected directory
