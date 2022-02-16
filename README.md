@@ -7,7 +7,7 @@ diffs.
 ### A Few Notes on Security
 This program reads commands from a file and executes them. It is important
 to know and trust the source of any repository that this program is run against to prevent
-arbitrary code execution. If you are unsure if a repository is trustworthy you
+runnning arbitrary code. If you are unsure if a repository is trustworthy you
 can inspect the tests at ```./github/classroom/autograding.json```.
 
 ## Usage
@@ -37,7 +37,7 @@ After running
 ```
 ./test
 ```
-this program will run all of the GitHub tests locally, and print the results. Indicating whether
+this program will run all of the GitHub Classroom tests locally, and print the results. Indicating whether
 each test passed or failed with a ✅ or ❌ respectively.
 ```
 EXAMPLE:
