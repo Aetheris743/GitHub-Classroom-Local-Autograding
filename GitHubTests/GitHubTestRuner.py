@@ -31,10 +31,10 @@ def input_equalls(result, goal, line_ending="\r\n") -> bool:
     lines = goal.split("\n")
     new_lines = result[:-1].split("\n")
 
-    while len(new_lines) != len(lines):
+    while len(new_lines) < len(lines):
         new_lines.append("")
-    # while len(lines) < len(new_lines):
-    #     lines.append("")
+    while len(lines) < len(new_lines):
+        lines.append("")
 
     for line in range(len(new_lines)):
         if new_lines[line].strip() != lines[line].strip():
