@@ -83,16 +83,19 @@ def run_tests(timout=0.1):
     for key in results:
         symbol = "✅" if results[key]["result"] else "❌"
         options.append(f"{symbol} {key}")
-    options_prompt = interface.prompt(options)
+    options_prompt = interface.prompt(options, overrideValues={"r": "Rerun Tests", "q": "Quit"})
     if number_passed != number_total:
         print(f"\n\nPassed {number_passed} out of {number_total}\n\nExamine test results (-1 to quit):")
         option = options_prompt.get_input()
-        while option > -1 and option < len(options):
+        while option != "r" and option != "q" and option > -1 and option < len(options):
             test_input = data['tests'][option]['input'].replace('\r', '\\r').replace('\n', '\\n')
             print(f"Test '{ data['tests'][option]['name'] }' used stdin input '{ test_input }'")
             show_diff(results[data["tests"][option]["name"]]["output"], data["tests"][option]["output"])
             print("Examine test results (-1 to quit):")
-            option = options_prompt.get_input()        
+            option = options_prompt.get_input()    
+        if option == "r":
+            print("Re-running tests")
+            run_tests()    
 
     if number_passed == number_total:
         print(f"\nPassed all tests! 🎊🥳🚀\n")
